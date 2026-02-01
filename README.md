@@ -1,3 +1,8 @@
+## minor fixes
+- Keras 2.x / TF 2.x compatible (learning_rate, predict)
+- Pandas 2.x compatible
+- windows path handling fix
+
 # Deep learning for liver NAS and fibrosis scoring
 
 Repository for the publication "Deep learning enables pathologist-like scoring of NASH models". Nature scientific reports, 2019: https://www.nature.com/articles/s41598-019-54904-6.
