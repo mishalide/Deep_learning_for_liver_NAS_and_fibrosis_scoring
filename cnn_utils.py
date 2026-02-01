@@ -4,7 +4,7 @@ All rights reserved.
  
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer. 
 
 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials # provided with the distribution.
  
@@ -25,16 +25,18 @@ import matplotlib.pyplot as plt
 import json
 from sklearn.metrics import confusion_matrix
 import tensorflow as tf
-from keras.preprocessing.image import ImageDataGenerator
-from keras.models import Sequential, Model
-from keras.layers import Conv2D, MaxPooling2D, GlobalAveragePooling2D, Input
-from keras.layers import Activation, Dropout, Flatten, Dense, BatchNormalization
-from keras.models import load_model
-from keras import backend as K
-from keras import applications
-from keras import optimizers
-from keras.callbacks import EarlyStopping, TensorBoard, ReduceLROnPlateau, ModelCheckpoint
-from keras.utils import multi_gpu_model
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.models import Sequential, Model, load_model
+from tensorflow.keras.layers import (
+    Conv2D, MaxPooling2D, GlobalAveragePooling2D,
+    Input, Activation, Dropout, Flatten, Dense, BatchNormalization
+)
+from tensorflow.keras import backend as K
+from tensorflow.keras import applications, optimizers
+from tensorflow.keras.callbacks import (
+    EarlyStopping, TensorBoard, ReduceLROnPlateau, ModelCheckpoint
+)
+
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
@@ -291,7 +293,7 @@ class cnn_utils:
 			self.model.load_weights(self.model_path + self.model_file_name)		
 		
 		# Compile the model
-		self.model.compile(loss = 'categorical_crossentropy', optimizer = optimizers.SGD(lr = 0.5e-4, momentum = 0.9), metrics = ['accuracy'])
+		self.model.compile(loss = 'categorical_crossentropy', optimizer = optimizers.SGD(learning_rate = 0.5e-4, momentum = 0.9), metrics = ['accuracy'])
 
 	def train_model(self, n_epochs = 45):
 		""" Trains <self.model>
@@ -376,7 +378,7 @@ class cnn_utils:
 				shuffle = False)
 
 		# Make the prediction		
-		y_predict_val = self.model.predict_generator(test_generator, test_generator.n, verbose=1)
+		y_predict_val = self.model.predict(test_generator, test_generator.n, verbose=1)
 			
 		# Create data frame with a list of the validation data
 		validation_list = pd.DataFrame(columns = self.list_of_classes)
@@ -516,7 +518,7 @@ class cnn_utils:
 		# print(test_generator.n, len(test_generator.filenames))
 			
 		# Make the prediction
-		y_predict = self.model.predict_generator(test_generator, test_generator.n, verbose=1)
+		y_predict = self.model.predict(test_generator, test_generator.n, verbose=1)
 			
 		# Add classification results to a dataframe
 		df = pd.DataFrame(y_predict, columns = self.list_of_classes)
@@ -558,18 +560,20 @@ class cnn_utils:
 			# (2) "19_212_E1202_105_2" ("E1202" is ANIMALNO)
 			filename_parts = filename.split("_")
 			num_items = len(filename_parts)
-						
+			import os
+
 			# Last part: y
-			y = int(filename_parts[num_items-1])
-			# Second last part: x
-			x = int(filename_parts[num_items-2])
+			y_str = os.path.splitext(filename_parts[num_items-1])[0]  
+			y = int(y_str)
+			x_str = os.path.splitext(filename_parts[num_items-2])[0]  
+			x = int (x_str)
 			
 			# Third last part: group_and_animal
 			group_and_animal = filename_parts[num_items-3]
 			
 			# Part one and two: group_and_animal			
 			experiment_tmp = filename_parts[0] + "_" + filename_parts[1]
-			experiment = experiment_tmp.split("/")[1]
+			experiment = os.path.basename(os.path.dirname(experiment_tmp))
 			
 			classification_result.at[index, "x"] = x
 			classification_result.at[index, "y"] = y
@@ -736,7 +740,7 @@ class cnn_utils:
 							current_result[score_name] = np.nan
 						
 						# Add to summary dataframe
-						summary_result = summary_result.append(current_result, ignore_index = True)
+						summary_result = pd.concat([summary_result, current_result], ignore_index=True)
 						
 			# Reorder columns			
 			column_names.append("average_uncertainty")			
