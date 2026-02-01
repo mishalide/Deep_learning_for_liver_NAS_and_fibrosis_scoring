@@ -3,7 +3,7 @@ models:
     ballooning_model:   "./model/liver/NAS/ballooning/model/Liver_ballooning_model_V1.02.h5"        
     inflammation_model: "./model/liver/NAS/inflammation/model/Liver_inflammation_model_V1.0.h5"
     steatosis_model:    "./model/liver/NAS/steatosis/model/Liver_steatosis_model_V1.0.h5"
-    fibrosis_model:     "./model/liver/fibrosis/model/Liver_fibrosis_model_V1.0.h5"
+    fibrosis_model:     "./model/liver/fibrosis/model/Liver_fibrosis_Model_2019.07.05.h5"
 
 thresholds:
     # Thresholds json files
