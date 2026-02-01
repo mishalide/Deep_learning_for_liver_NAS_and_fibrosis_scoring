@@ -2,6 +2,7 @@
 - Keras 2.x / TF 2.x compatible (learning_rate, predict)
 - Pandas 2.x compatible
 - windows path handling fix
+## modified to only work with fibrosis ‼️‼️‼️
 
 # Deep learning for liver NAS and fibrosis scoring
 
